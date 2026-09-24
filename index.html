@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgisayar Kavramları Topluluğu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .redirect-box {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+            padding: 24px;
+        }
+        .redirect-box a {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body data-redirect="active-event">
+    <div class="redirect-box">
+        <p>Aktif etkinliğe yönlendiriliyorsunuz...</p>
+        <p>
+            Otomatik yönlendirme çalışmazsa
+            <a id="manual-link" href="events/event-1.html">buraya tıklayın</a>.
+        </p>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Yedek bağlantıyı da aktif etkinliğe göre güncelle
+        document.getElementById("manual-link").href = "events/" + ACTIVE_EVENT;
+    </script>
+</body>
+</html>

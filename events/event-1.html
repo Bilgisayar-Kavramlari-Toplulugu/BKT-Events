@@ -32,49 +32,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Canvas Confetti & Fireworks helper -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0f1d;
-            color: #f3f4f6;
-            overflow-x: hidden;
-        }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glow-effect {
-            box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.3);
-        }
-        .text-glow {
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .floating {
-            animation: float 4s ease-in-out infinite;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0f1d;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-    </style>
+    <!-- Ortak Stiller -->
+    <link rel="stylesheet" href="../css/style.css">
 </head>
-<body class="bg-darkbg min-h-screen relative selection:bg-indigo-500 selection:text-white">
+<body class="bg-darkbg min-h-screen relative selection:bg-indigo-500 selection:text-white" data-event-date="2026-09-27T20:00:00+03:00">
 
     <canvas id="fireworks-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
 
@@ -424,64 +385,7 @@
         </div>
     </footer>
 
-    <script>
-        // Target Date: September 27, 2026, 20:00:00 Turkey Time (GMT+3)
-        const targetDate = new Date("2026-09-27T20:00:00+03:00").getTime();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            if (distance < 0) {
-                document.getElementById("days").innerText = "00";
-                document.getElementById("hours").innerText = "00";
-                document.getElementById("minutes").innerText = "00";
-                document.getElementById("seconds").innerText = "00";
-                document.getElementById("countdown-message").classList.remove("hidden");
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").innerText = String(days).padStart(2, '0');
-            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
-            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
-            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Fireworks function triggered automatically on page load
-        function triggerFireworks() {
-            var duration = 3.5 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
-
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
-
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
-        }
-
-        // Automatically fire celebration on page load
-        window.addEventListener('load', () => {
-            setTimeout(triggerFireworks, 400);
-        });
-    </script>
+    <!-- Ortak JS: geri sayım + havai fişek -->
+    <script src="../js/main.js"></script>
 </body>
 </html>
