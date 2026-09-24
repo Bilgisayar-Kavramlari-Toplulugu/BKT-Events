@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgisayar Kavramları Topluluğu - 2. Dönem Başlangıç Toplantısı</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0f1d',
+                        cardbg: '#111827',
+                        accent: '#6366f1',
+                        accenthover: '#4f46e5',
+                        neonblue: '#38bdf8',
+                        neonpurple: '#c084fc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti & Fireworks helper -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f1d;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.3);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0f1d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="bg-darkbg min-h-screen relative selection:bg-indigo-500 selection:text-white">
+
+    <canvas id="fireworks-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+    <!-- Background glowing gradients -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-sky-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-10 left-1/3 w-96 h-96 bg-purple-600/15 rounded-full blur-[140px] pointer-events-none"></div>
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-code text-white text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-indigo-200 to-sky-400 bg-clip-text text-transparent">Bilgisayar Kavramları</span>
+                    <span class="block text-xs text-indigo-400 font-medium">Topluluğu</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#countdown-section" class="hidden sm:inline-flex items-center text-sm font-medium text-gray-300 hover:text-white transition">Geri Sayım</a>
+                <a href="#agenda" class="hidden sm:inline-flex items-center text-sm font-medium text-gray-300 hover:text-white transition">Ajanda</a>
+                <a href="#groups" class="hidden sm:inline-flex items-center text-sm font-medium text-gray-300 hover:text-white transition">Çalışma Grupları</a>
+                <a href="https://calendar.google.com/calendar/event?action=TEMPLATE&amp;tmeid=NDlrNHRhNDViM21jOHE4NmNsNTZqM2J0azkgZjBjMTEwZGU3ZGZiNjFlNDJkYzEyZWM1M2FlZTZlNWI1ZTA0OTAyMzU5MjcxYTM4MTU3M2RhMDk0NTc4MWRjOEBn&amp;tmsrc=f0c110de7dfb61e42dc12ec53aee6e5b5e04902359271a381573da0945781dc8%40group.calendar.google.com" target="_blank" class="bg-gradient-to-r from-indigo-600 to-sky-500 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition transform flex items-center space-x-2">
+                    <i class="fa-regular fa-calendar-plus"></i>
+                    <span>Takvime Ekle</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="relative pt-16 pb-20 md:pt-24 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-4xl mx-auto">
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-panel border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-semibold mb-6 floating">
+                <span class="flex h-2 w-2 rounded-full bg-sky-400 animate-ping"></span>
+                <span>2. Dönem Başlangıç Toplantısı</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white mb-6 leading-tight">
+                Geleceği Birlikte <br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-indigo-400 via-sky-400 to-purple-400 bg-clip-text text-transparent text-glow">Kodluyor ve Üretiyoruz</span>
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-300 mb-10 leading-relaxed font-light">
+                <strong class="text-white font-semibold">810+ katılımcıya</strong> ulaşan topluluğumuzun yeni döneminde; bilgi paylaşmak, birlikte üretmek ve aktif rol almak için bir araya geliyoruz!
+            </p>
+
+            <!-- Event quick info badge bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+                <div class="glass-panel p-4 rounded-2xl flex items-center space-x-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs text-gray-400 font-medium">Tarih</div>
+                        <div class="text-sm font-bold text-white">27 Eylül 2026, Pazar</div>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl flex items-center space-x-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs text-gray-400 font-medium">Saat</div>
+                        <div class="text-sm font-bold text-white">20.00 – 21.00 (TSİ)</div>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl flex items-center space-x-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs text-gray-400 font-medium">Format</div>
+                        <div class="text-sm font-bold text-white">Çevrim İçi (Online)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Buttons (Only calendar add remains here cleanly) -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://calendar.google.com/calendar/event?action=TEMPLATE&amp;tmeid=NDlrNHRhNDViM21jOHE4NmNsNTZqM2J0azkgZjBjMTEwZGU3ZGZiNjFlNDJkYzEyZWM1M2FlZTZlNWI1ZTA0OTAyMzU5MjcxYTM4MTU3M2RhMDk0NTc4MWRjOEBn&amp;tmsrc=f0c110de7dfb61e42dc12ec53aee6e5b5e04902359271a381573da0945781dc8%40group.calendar.google.com" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-105 transition transform flex items-center justify-center space-x-3 text-base">
+                    <i class="fa-regular fa-calendar-plus text-xl"></i>
+                    <span>Google Takvim'e Ekle</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="countdown-section" class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-indigo-500/20 glow-effect relative overflow-hidden text-center">
+            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Etkinliğe Kalan Süre</h2>
+            <p class="text-gray-400 text-sm sm:text-base mb-8">27 Eylül 2026, Pazar • Saat 20.00 (Türkiye Saati)</p>
+
+            <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-3xl mx-auto">
+                <div class="bg-gray-900/80 rounded-2xl p-4 sm:p-6 border border-gray-800 flex flex-col items-center justify-center shadow-inner">
+                    <span id="days" class="text-3xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-300">00</span>
+                    <span class="text-xs sm:text-sm font-semibold uppercase tracking-widest text-indigo-400 mt-2">Gün</span>
+                </div>
+                <div class="bg-gray-900/80 rounded-2xl p-4 sm:p-6 border border-gray-800 flex flex-col items-center justify-center shadow-inner">
+                    <span id="hours" class="text-3xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-sky-300">00</span>
+                    <span class="text-xs sm:text-sm font-semibold uppercase tracking-widest text-sky-400 mt-2">Saat</span>
+                </div>
+                <div class="bg-gray-900/80 rounded-2xl p-4 sm:p-6 border border-gray-800 flex flex-col items-center justify-center shadow-inner">
+                    <span id="minutes" class="text-3xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-purple-300">00</span>
+                    <span class="text-xs sm:text-sm font-semibold uppercase tracking-widest text-purple-400 mt-2">Dakika</span>
+                </div>
+                <div class="bg-gray-900/80 rounded-2xl p-4 sm:p-6 border border-gray-800 flex flex-col items-center justify-center shadow-inner">
+                    <span id="seconds" class="text-3xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-pink-300">00</span>
+                    <span class="text-xs sm:text-sm font-semibold uppercase tracking-widest text-pink-400 mt-2">Saniye</span>
+                </div>
+            </div>
+            
+            <div id="countdown-message" class="mt-6 text-indigo-300 font-medium text-sm hidden">
+                ✨ Etkinlik Başlamıştır! Toplantı odasında buluşuyoruz.
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="text-indigo-400 font-bold uppercase tracking-wider text-xs">YENİ DÖNEM VİZYONU</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-6">
+                    Sadece Kalabalık Değil, <span class="text-indigo-400">Üreten</span> Bir Topluluk
+                </h2>
+                <p class="text-gray-300 leading-relaxed mb-6 font-light">
+                    Bilgisayar Kavramları Topluluğu olarak ikinci dönemimize başlıyoruz! 810 katılımcıya ulaşan topluluğumuzun yeni döneminde; daha fazla bilgi paylaşmak, birlikte üretmek, farklı alanlarda çalışmalar yürütmek ve katılımcılarımızın aktif olarak rol alabileceği bir topluluk yapısı oluşturmak için yeni dönemin planlarını paylaşacağız.
+                </p>
+                <p class="text-gray-300 leading-relaxed font-light mb-8">
+                    Bu toplantı, yeni dönemin genel çerçevesini birlikte belirlemek ve topluluğumuzun çalışma yapısını tüm katılımcılarla paylaşmak amacıyla gerçekleştirilecektir. Yeni dönemin başlangıcında sizleri de aramızda görmekten ve bu süreci birlikte şekillendirmekten mutluluk duyacağız.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold text-xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-white">810+</div>
+                            <div class="text-xs text-gray-400">Aktif Üye</div>
+                        </div>
+                    </div>
+                    <div class="h-10 w-px bg-gray-800"></div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-xl bg-sky-600/20 text-sky-400 flex items-center justify-center font-bold text-xl">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-black text-white">5</div>
+                            <div class="text-xs text-gray-400">Çalışma Grubu</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-panel p-8 rounded-3xl border border-gray-800 relative">
+                <div class="absolute -top-4 -right-4 bg-gradient-to-r from-indigo-500 to-sky-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                    Yeni Hedefler 🚀
+                </div>
+                <h3 class="text-xl font-bold text-white mb-6">Yeni Dönemde Hedefimiz</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </div>
+                        <span class="text-gray-300 text-sm">Bilgi paylaşan, üreten ve birbirinden öğrenen organik bir ekosistem kurmak.</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </div>
+                        <span class="text-gray-300 text-sm">Somut projeler ve çıktılar ortaya koyan aktif çalışma grupları işletmek.</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </div>
+                        <span class="text-gray-300 text-sm">Her bir katılımcının fikirlerini, katkılarını ve üretimini merkeze almak.</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <div class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </div>
+                        <span class="text-gray-300 text-sm">Sektörel buluşmalar, hackathonlar ve teknik atölyeler düzenlemek.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="agenda" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-indigo-400 font-bold uppercase tracking-wider text-xs">TOPLANTI PROGRAMI</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Toplantıda Neler Konuşacağız?</h2>
+            <p class="text-gray-400 mt-2">Yeni dönemin yol haritasını adım adım masaya yatırıyoruz.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Agenda Item 1 -->
+            <div class="glass-panel p-6 rounded-3xl border border-gray-800 hover:border-indigo-500/40 transition group">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-600/10 text-indigo-400 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">1. Yeni Döneme Genel Bakış</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Topluluğumuzun kuruluş amacı, geride bıraktığımız dönem ve ikinci dönemde ulaşmak istediğimiz hedefler üzerine konuşacağız.
+                </p>
+            </div>
+
+            <!-- Agenda Item 2 -->
+            <div class="glass-panel p-6 rounded-3xl border border-gray-800 hover:border-indigo-500/40 transition group">
+                <div class="w-14 h-14 rounded-2xl bg-sky-600/10 text-sky-400 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">2. Yönetimin Tanıtılması</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Eş başkanlarımız ve başkan yardımcımız kendilerini tanıtacak; yeni dönemde üstlenecekleri görevlerden ve hedeflerden bahsedecek.
+                </p>
+            </div>
+
+            <!-- Agenda Item 3 -->
+            <div class="glass-panel p-6 rounded-3xl border border-gray-800 hover:border-indigo-500/40 transition group">
+                <div class="w-14 h-14 rounded-2xl bg-purple-600/10 text-purple-400 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">3. Çalışma Grupları</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Bulut Bilişim, MIS, Yapay Zekâ, Girişimcilik ve Yazılım olmak üzere 5 farklı çalışma grubumuzu ve grup liderlerini tanıyacağız.
+                </p>
+            </div>
+
+            <!-- Agenda Item 4 -->
+            <div class="glass-panel p-6 rounded-3xl border border-gray-800 hover:border-indigo-500/40 transition group">
+                <div class="w-14 h-14 rounded-2xl bg-pink-600/10 text-pink-400 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">4. İşleyiş ve Kurallar</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    İletişim, saygılı ve yapıcı tartışma kültürü, gizlilik, çalışma gruplarının işleyişi ile ilgili temel noktaları hatırlayacağız.
+                </p>
+            </div>
+
+            <!-- Agenda Item 5 -->
+            <div class="glass-panel p-6 rounded-3xl border border-gray-800 hover:border-indigo-500/40 transition group">
+                <div class="w-14 h-14 rounded-2xl bg-amber-600/10 text-amber-400 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-calendar-star"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">5. İlk Etkinlikler</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Yeni dönemin ilk etkinliklerini, planlanan çalışma takvimini ve katılım süreçlerini topluluğumuzla duyuracağız.
+                </p>
+            </div>
+
+            <!-- Agenda Item 6 -->
+            <div class="glass-panel p-6 rounded-3xl border border-gray-800 hover:border-indigo-500/40 transition group">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">6. Soru - Cevap</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Toplantının sonunda katılımcılarımızın sorularını, önerilerini ve yeni döneme ilişkin görüşlerini dinleyip cevaplayacağız.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="groups" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-sky-400 font-bold uppercase tracking-wider text-xs">EKOSİSTEMİMİZ</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">5 Farklı Çalışma Grubumuz</h2>
+            <p class="text-gray-400 mt-2">İlgi alanınıza uygun gruba katılın, birlikte üreterek gelişin.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Group 1 -->
+            <div class="glass-panel p-6 rounded-3xl border border-sky-500/20 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl group-hover:bg-sky-500/20 transition"></div>
+                <div class="w-12 h-12 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-cloud"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Bulut Bilişim</h3>
+                <p class="text-gray-300 text-sm">Bulut mimarileri, DevOps süreçleri, konteyner teknolojileri ve modern altyapı çözümleri.</p>
+            </div>
+
+            <!-- Group 2 -->
+            <div class="glass-panel p-6 rounded-3xl border border-indigo-500/20 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition"></div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Yönetim Bilişim Sistemleri</h3>
+                <p class="text-gray-300 text-sm">İş zekası, veri analitiği, dijital dönüşüm ve yönetim ile teknolojilerin kesişim noktası.</p>
+            </div>
+
+            <!-- Group 3 -->
+            <div class="glass-panel p-6 rounded-3xl border border-purple-500/20 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition"></div>
+                <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Yapay Zekâ</h3>
+                <p class="text-gray-300 text-sm">Makine öğrenmesi, derin öğrenme, üretken yapay zekâ modelleri ve pratik uygulamalar.</p>
+            </div>
+
+            <!-- Group 4 -->
+            <div class="glass-panel p-6 rounded-3xl border border-pink-500/20 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition"></div>
+                <div class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Girişimcilik ve Cofounder</h3>
+                <p class="text-gray-300 text-sm">Girişim fikirleri, MVP geliştirme, iş modeli oluşturma ve ortak kurucu bulma platformu.</p>
+            </div>
+
+            <!-- Group 5 -->
+            <div class="glass-panel p-6 rounded-3xl border border-emerald-500/20 relative overflow-hidden group sm:col-span-2 lg:col-span-1">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"></div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Yazılım ve Programlama</h3>
+                <p class="text-gray-300 text-sm">Algoritmalar, web & mobil geliştirme, açık kaynak katkıları ve kod inceleme seansları.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-20 border-t border-gray-800 bg-gray-950/60 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-code text-white text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-base text-white">Bilgisayar Kavramları Topluluğu</span>
+                    <span class="block text-xs text-gray-400">2. Dönem Başlangıç Toplantısı</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <a href="https://calendar.google.com/calendar/event?action=TEMPLATE&amp;tmeid=NDlrNHRhNDViM21jOHE4NmNsNTZqM2J0azkgZjBjMTEwZGU3ZGZiNjFlNDJkYzEyZWM1M2FlZTZlNWI1ZTA0OTAyMzU5MjcxYTM4MTU3M2RhMDk0NTc4MWRjOEBn&amp;tmsrc=f0c110de7dfb61e42dc12ec53aee6e5b5e04902359271a381573da0945781dc8%40group.calendar.google.com" target="_blank" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-sky-500 text-white font-medium rounded-xl shadow-lg hover:scale-105 transition text-sm flex items-center space-x-2">
+                    <i class="fa-regular fa-calendar-plus"></i>
+                    <span>Takvime Ekle</span>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-900 text-center text-xs text-gray-500">
+            &copy; 2026 Bilgisayar Kavramları Topluluğu. Tüm hakları saklıdır. 27 Eylül Pazar saat 20.00'de görüşmek üzere! 🚀
+        </div>
+    </footer>
+
+    <script>
+        // Target Date: September 27, 2026, 20:00:00 Turkey Time (GMT+3)
+        const targetDate = new Date("2026-09-27T20:00:00+03:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                document.getElementById("countdown-message").classList.remove("hidden");
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = String(days).padStart(2, '0');
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Fireworks function triggered automatically on page load
+        function triggerFireworks() {
+            var duration = 3.5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        // Automatically fire celebration on page load
+        window.addEventListener('load', () => {
+            setTimeout(triggerFireworks, 400);
+        });
+    </script>
+</body>
+</html>
