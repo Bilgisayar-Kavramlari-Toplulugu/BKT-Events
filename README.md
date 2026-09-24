@@ -19,10 +19,13 @@ Bilgisayar Kavramları Topluluğu'nun etkinlik duyuru sayfalarını barındıran
 │   └── style.css       # Ortak stiller (glass panel, glow, animasyonlar)
 ├── js/
 │   └── main.js         # Yönlendirme + geri sayım + konfeti
-└── images/             # Etkinlik görselleri
+├── images/             # Etkinlik görselleri
+└── EVENT_PROMPT.md     # Yeni etkinlik sayfası ürettirme prompt şablonu
 ```
 
 ## Yeni Etkinlik Yayımlama
+
+> 💡 **İpucu:** Sayfayı bir yapay zekâ asistanına ürettirmek için [`EVENT_PROMPT.md`](EVENT_PROMPT.md) dosyasındaki hazır prompt şablonunu kullanabilirsin — değişkenleri doldurman yeterli, aşağıdaki adımları asistan senin yerine uygular.
 
 1. **Etkinlik sayfasını hazırla:** `events/event-1.html` dosyasını şablon olarak kopyala ve içeriğini (başlık, tarih, ajanda, Meet/Takvim bağlantıları) güncelle.
 2. **Geri sayım tarihini ayarla:** Sayfanın `<body>` etiketindeki özniteliği düzenle:
